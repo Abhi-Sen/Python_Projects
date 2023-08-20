@@ -19,6 +19,11 @@ class HumanPlayer(Player):
         val = None
         while not valid_square:
             square = input(self.letter + '\'s turn. Input move (0-9): ')
+
+            # we are going to check that this is a correct value by trying to cast it to an integer, and
+            # if it's not, then we say it's invalid
+            # if that spot not available on the board then we also say it's invalid
+
             try:
                 val = int(square)
                 if val not in game.available_moves():
@@ -26,6 +31,7 @@ class HumanPlayer(Player):
                 valid_square = True
             except ValueError:
                 print('Invalid square. Try again.')
+
         return val
 
 
@@ -34,6 +40,7 @@ class RandomComputerPlayer(Player):
         super().__init__(letter)
 
     def get_move(self, game):
+        # get a random valid spot for our next move
         square = random.choice(game.available_moves())
         return square
 
@@ -55,8 +62,9 @@ class SmartComputerPlayer(Player):
 
         # checking if the previous move is a winner
         if state.current_winner == other_player:
-            return {'position': None, 'score': 1 * (state.num_empty_squares() + 1) if other_player == max_player else -1 * (
-                        state.num_empty_squares() + 1)}
+            return {'position': None,
+                    'score': 1 * (state.num_empty_squares() + 1) if other_player == max_player else -1 * (
+                            state.num_empty_squares() + 1)}
         elif not state.empty_squares():
             return {'position': None, 'score': 0}
 
